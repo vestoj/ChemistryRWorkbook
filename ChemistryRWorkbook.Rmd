@@ -9,7 +9,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 #devtools::install_github("lionel-/redpen")
-devtools::install_github("dtkaplan/checkr")
+#devtools::install_github("dtkaplan/checkr")
 #devtools::install_github("ismayc/chemistr")
 library(tidyverse)
 library(shiny)
