@@ -27,4 +27,4 @@ tutorial_options(exercise.checker = checkr::check_for_learnr)
 
 Make sure to save the document. Then go ahead and publish it.
 
-
+For possible issues that may arise when publishing or accessing the workbook see "Issues" tab and filter for closed issues.
