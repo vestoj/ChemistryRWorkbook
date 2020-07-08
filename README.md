@@ -2,7 +2,7 @@
 
 https://shiny.reed.edu/s/users/vestoj/chem/#section-intro-to-workbook
 
-# How to use shiny.reed.edu to create and edit a Website:
+# How to use shiny.reed.edu to create and edit a website:
 
 URL: shiny.reed.edu/r/ 
 
