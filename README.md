@@ -4,7 +4,7 @@ https://shiny.reed.edu/s/users/vestoj/chem/#section-intro-to-workbook
 
 # How to use shiny.reed.edu to create and edit a Website:
 
-RL: shiny.reed.edu/r/ 
+URL: shiny.reed.edu/r/ 
 
 First create a folder labeled “ShinyApps”. Inside ShinyApps folder create a secondary folder labeled with the title that will be part of the URL (i.e. chem, chemistry, upperdivision, chemistry-reference). Inside URL folder create an RMD file labeled “index”.
 
