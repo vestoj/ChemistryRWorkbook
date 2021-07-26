@@ -1,0 +1,1957 @@
+---
+title: "Chemistry R Workbook"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+#devtools::install_github("lionel-/redpen")
+#devtools::install_github("dtkaplan/checkr")
+#devtools::install_github("ismayc/chemistr")
+library(tidyverse)
+library(shiny)
+library(devtools)
+library(chemistr)
+library(learnr)
+library(checkr)
+library(redpen)
+
+knitr::opts_chunk$set(echo = FALSE)
+tutorial_options(exercise.checker = checkr::check_for_learnr)
+```
+
+##0.0 Intro to Workbook 
+
+This is an interactive workbook that should introduce you to using R in a Chemistry setting. 
+
+The intended reader has no previous coding experience, or limited experience working with R, however, the workbook will still be beneficial to previous R users.
+
+It is estimated that this workbook will take **120** minutes to complete and should be done before beginning the first Chemistry lab report.
+
+*This workbook was last edited: July 27th, 2018*
+ 
+## 0.1 Interactive Components.
+
+Throughout the workbook, there will be code checking exercises that will allow the user to write code and receive feedback or will quiz the user on different concepts discussed in the book. There is no penalty for incorrect answers, attempting to code is still useful practice even if the output is not what was expected.
+
+If there is any problem with the interactive components please email dcass@reed.edu.
+
+###Practice Exercise 1.
+
+1. Have you worked with any coding languages before? Type yes or no (make sure not to capitalize them) and then click **Run Code**.
+
+
+```{r coding-setup, exercise=FALSE}
+yes<- "Great! Your previous experience will be helpful in working with R this next semester. This workbook will help you further understand the package chemistr which is necessary for all labs in general chemistry at Reed."
+no<- "This workbook should be a great resource in getting you started with coding. The expectation is that incoming general chemistry students have no previous coding experience!"
+
+```
+
+```{r coding, exercise=TRUE, caption="Previous Experience"}
+
+```
+
+```{r follow}
+question("Did you get an output when you typed yes or no?",
+  answer("yes", correct=TRUE, message="Great! go ahead and start working your way through the rest of the workbook."),
+  answer("no", message="Did you make sure to click **Run Code**?"),
+  answer("yes, but it was an error message", message = "Make sure you typed yes or no exactly as written in the question, R code is case sensitive."),
+  allow_retry = TRUE
+)
+
+```
+ 
+## 1.0 Introduction to R and RStudio
+Before beginning to code it is important to understand what R is.
+
+This information is not necessary for completing a lab report, however, it will give you a better idea of how R works and why we use it.
+
+Knowing how R works is important because it will allow you to develop uses for R outside of Chemistry lab reports. This can help you regardless of what discipline you plan on studying since R is often used outside of STEM.
+
+###Practice Exercise 2. 
+
+Which of these subjects are you interested in? Mathematics, Art, Political_Science, Science, Other
+
+Type the name of the subject on an empty line of code spelled exactly as it is spelled above (capitals and all).
+
+```{r interest-setup}
+Mathematics <- "R is the programming language of choice for Statistics."
+Political_Science <- "R is often used in Political Science to analyze election data."
+Art <- "There are some really cool graphic design creations using R plots."
+Other <- "There are many more uses for R, data is often considered the `natural resource` of the 21st century and knowing how to analyze it is a very useful skill."
+Science <- "Science uses R to analyze data and to create really impressive data visualization models that are reproducible. Data interpretation, when working in a lab, can become really tedious since you are running the same calculations thousands of times. Using R simplifies the calculations so that you just have to plug in the data straight from the instrument after you have analyzed it once."
+```
+
+```{r interest, exercise=TRUE}
+
+```
+
+Click **Run Code** when finished.
+
+
+##1.1 R
+
+R is an open source programming language. It is the language of choice for many people conducting statistical work or doing "data science".
+
+In recent years, R has seen increased adoption as the language of choice across a number of disciplines, including the physical and natural sciences. Here is a link to some interesting trends about R usage https://stackoverflow.blog/2017/10/10/impressive-growth-r/.
+
+R has a very active developer community, with thousands of tools ("packages") available and under regular development.
+
+
+##1.2 RStudio
+
+RStudio is a graphical interface that makes working with the R language more approachable. 
+
+RStudio also enables you to do some things that you cannot do in "base R" using the R console itself. *For people interested in programming, note that RStudio is also an integrated development environment.*
+
+**In non-technical language, R is the engine and RStudio is the dashboard. R is what makes things happen and RStudio shows you what is happening.**
+
+##1.3 Why do we use R?
+
+1. R and RStudio are free; you can use these tools after you leave Reed.
+
+2. The code makes analyses reproducible.
+
+3. Reproducibility makes collaborating on, building on and repeating past work easier.
+
+4. Finding answers to technical questions is much simpler, due to the active user community and the abundance of places to find answers when you encounter trouble.
+
+5. R and Rstudio are cross-platform, they can be used on Mac/Windows/Linux etc.
+
+
+
+##1.4 Packages
+
+###1.4.1 What are packages?
+
+Packages are collections of code that can be used by people other than the author. 
+
+Packages are essentially toolboxes of code. They can speed up R analyses and make the code simpler for programmers to write. Another use for R packages is accessing data. For instance, if you wanted to see the average life expectancy of Americans in 1952 you could load the `gapminder` package.  
+
+###1.4.2 How do you use packages?
+
+Packages are generally loaded on to RStudio using the `install.packages()` or `install_github()` functions. This is dependent on where the packages have been published. **Reed's R server eliminates the need for students to install packages by pre-installing commonly used packages onto the server. **
+
+Once RStudio has the package installed it is then necessary to load the package. **This has to be done for every document in R.**
+
+**The function for loading packages is `library(packagename)`.** 
+
+###1.4.3 Chemistr
+
+Staff at Reed (in computing [CIS] and Chemistry) created and maintain a package called `chemistr`, which is tailored specifically to the work that you are doing in your labs. This will allow you to write lab reports that are consistent in format, easy to check for errors, and contain beautiful data visualizations.
+
+When you use the Reed chemistr package you need to type `library(chemistr)` into the document and run the code. 
+ 
+##2.0 Introduction to Coding
+This chapter will serve as a crash course on how to code in R. It contains important information before continuing on to later chapters. 
+
+##2.1 Syntax
+
+When coding in R it is important that you follow a specific set of rules or syntax, that will ensure your code is able to be parsed (understood) by a computer.
+
+###2.1.1 Case Sensitive
+
+R is considered a case-sensitive language.
+
+`Hello` and `hello` are not the same.
+
+One of the most common errors is accidentally naming something with a capital and then trying to call it with a lowercase letter.
+
+When naming something either capitals or lowercase letters work, just make sure to be consistent when calling it.
+
+Try typing Chemistry into the following code chunk. 
+```{r capital123-setup}
+Chemistry <- "Great! you capitalized Chemistry exactly how we wanted it. Try running chemistry instead this time"
+chemistry <- "The output of Chemistry and chemistry are different. Make sure not to use Capitals and lowercase letters interchangeably."
+```
+
+```{r capital123, exercise=TRUE}
+
+```
+###2.1.2 Quotation Marks
+
+Using quotation marks around a word or phrase creates a string. Strings are a type of data that generally consists of words or phrases.
+
+Make sure quotation marks are closed, open quotation marks will cause errors.
+
+
+###2.1.3 Spaces
+
+Another common issue is knowing when spaces are allowed and when they are not.     
+Inside of strings spaces are allowed. However, if a variable, or function, contains a space R will report an error message. One way to get around this is to use an underscore `_` where you would normally put a space when outside of quotation marks.
+
+Spaces, however, are allowed when they do not occur between words.
+
+Ex.
+
+`Name <- "George"` is the same as `Name<-"George"`
+
+Using spaces and empty lines of code is a great way to break up long blocks of text so that it is easier for the user to read.
+
+###2.1.4 Commas
+
+R uses commas to separate different statements within a line of code. 
+
+For instance, when listing different data entries commas are necessary to separate the data points.
+
+Ex. 
+
+`data <- c(4,5,4,5)` instead of `data <- c(4 5 4 5)`
+
+Commas are also necessary for separating parts of a function that appear to span multiple lines of code.
+
+Ex.
+
+    `chem_scatter(data = iron_data,
+    
+            xvar = Iron,     
+            
+            yvar = Absorbance, 
+            
+            xlab = "[Iron](µM)",   
+            
+            ylab = "Absorbance at 508 nm",  
+            
+            intercept = 0) + labs(title="Standard Curve of Iron")`
+
+With larger code sequences be extra careful not to miss commas.
+
+###2.1.5 Parenthesis
+
+With parentheses, the biggest issue is making sure that the parentheses are closed
+
+A great trick for this is to click after one of the parentheses and the opening or closing parenthesis will automatically highlight itself.
+
+Example:
+
+Try clicking behind each parenthesis in this line of code.
+
+```{r cexamplee, exercise=TRUE}
+data1 <- c("input1", "input2", "input3")
+data2 <- c("input1", "input2", "input3")
+Data_frame <-  data.frame(data1, data2)
+
+Example <- chem_table(Data_frame, caption= "input")
+
+```
+
+
+##2.2 Functions
+
+One reason coding is useful is that it involves functions. 
+
+*Functions take an input, perform a task, and return an output. *   
+
+Functions do this by calling lines of code that are assigned to complex tasks.
+
+One function that you will see a lot in general chemistry is `chem_scatter()`.  
+
+This function inputs a dataset and a caption; reads the data, plots the data points on a graph, and generates a line of best fit; and then outputs a properly formatted table.
+
+Another commonly used function is `mean()`.     
+This function takes a list of data as an input; finds the average of the data points within the list; and returns the average. 
+
+*Note that parentheses, in R, indicate that an object is a function.* 
+
+For instance, R will read `name()` as a function regardless of whether it is has been defined as a function.
+
+This will result in an error if `name` is defined as something other than a function, or if `name` has yet to be defined.
+
+For example, the code `temp <- 23`, `temp_K <- temp + 273` and `new_trial <- temp_K(25)` would result in an error since the line `temp_k <- temp + 273` is assigning the current value for temp plus 273 to temp_K and it is not creating a function to convert temperature to Kelvin.
+
+Try fixing the following line of code.
+
+
+```{r function123456, exercise=TRUE}
+Temp <- c(20,23,22,24,25)
+mean(temp) <- mean[Temp]
+mean(Temp)
+```
+
+##2.3 Memory 
+
+
+###R's memory is confusing because we often perceive that R is performing a much simpler task than it actually is.
+
+For instance when assigning `temp <- 25` it is reasonable to assume that R is storing in its memory that temp = 25 when in actuality R is storing temp as a name and 25 as a value.
+
+###R uses environments to bind names to values when an assignment is run.  
+
+Thus, after that line of code is run, R now remembers 25 and temp and the environment tells R that the two are associated together. 
+
+This means that anytime temp is called, R will understand that temp means 25 as long as the environment is associating the two. 
+
+When the environment gets cleared (which can happen without you realizing it, especially if you don't look at the environment tab frequently) R erases the memory of its objects since they are no longer associated with a name. 
+
+To fix this, rerun the line of code that assigns the name to the value (in this case `temp <- 25`). R will now recognize the object temp as 25. 
+
+###R can also bind multiple values to the same object or name.
+
+This could be helpful if you were running the same calculations on large datasets. 
+
+If you were to run the lines of code `temp <- 23`,`temp <- 24`, and  `temp <- 25` R would only associate temp with the last assignment line run on it and thus temp would equal 25. 
+
+However, if you were to run the line of code `temp <- c(23,24,25)`, R would now associate all three data points with temperature. 
+
+Inside the environment tab in RStudio (which will be in the upper right-hand corner of the screen) this will appear as **temp  num  [1:3] 23 24 25**.
+
+If you were associate a name to a name that has already been associated with a value, R will associate the value with the new name and the old name. 
+
+If you were to later re-associate the first name with a new value, R would continue to associate the second name with the first value.
+
+For instance `temp <- 23`, `mass <- temp`, and `temp <- 25` would result in mass equaling 23 and temp equaling 25.
+
+If you wanted mass to be equal to the word temp you would have to write `mass <- "temp"` instead. 
+ 
+The most common errors students run into regarding R memory is actually because of the way the memory is assigned and not because of the memory itself.
+
+Inside of a project R will keep the same environment unless it is manually cleared. This means that if in one lab report document you were to assign `mass <- 4` and in the next document you called mass inside a calculation R will recall that mass is 4 unless it is re-assigned and run in the new document. 
+
+In order to keep this from happening accidentally, try to keep separate projects for each lab report and use unique names such as `Fe_mass_Aug8th <- 4`, just make sure to always call it using the same unique name.
+
+###2.3.1 In order to make sure that R can recall the correct code follow these instructions.
+
+(@) **Make sure that you are using consistent unique variable names**
+- R will rewrite variable names if something is changed. 
+- R recalls the last time the variable name is assigned and run. 
+- If the same variable is used multiple times throughout a document it can cause issues where R is using the wrong data set for the analysis.
+(@) **Run all of the code**
+- R will not remember variables it has not already assigned.
+- Not running code is one of the main issues students have with referencing variables that R cannot find.
+(@) **Assign the same dataset again when necessary.**
+- Copying and pasting code that assigns a data set into a new code chunk is a great way to make sure that R remembers the variable
+- However be sure that if you change the data in one place you change it in all places that the data is assigned. If this might be an issue for you avoid doing this.
+
+##2.4 Code Chunks
+
+Code chunks refer to sections of a document that the computer will parse (or read through).
+
+These sections must follow R syntax and must be run. R will report errors if there are any mistakes inside the R chunks.
+
+Generally, R will remember things assigned in previous R chunks within a document. There are cases in which this isn't true, however, this generally won't occur in general chemistry. The simplest fix if this happens anyway is to copy and paste the code into the new chunk. 
+
+Code Chunks will be discussed further at the end of the workbook when you have more experience with R.
+
+###Comments
+
+Keeping track of information about your lines of codes can be extremely helpful when analyzing the data as well as allowing you to later undertand what you wrote so that you can repeat it. 
+
+The simplest way to keep track of information about your code is to use comments. Comments are lines of code or portions of a line of code that the computer will not parse. They occur within code chunks and will also not be present in the final document. 
+
+Comments begin with a # and end when the next line of code begins. 
+
+Here is an example of some useful comments:
+
+`temp <- 23 #degrees celsius recorded using a glass thermometer before adding HCl`
+`temp_K <- 23+273 #This line converts the temperature into kelvin and assigns that to temp_K`
+`#Use temp_K for all further calculates`
+`mass <- c(2,3,4,12,10,20) #grams Fe1, Fe2, Cu1, Cu2, Ni1, Ni2 recorded using an analytical balance`
+
+###Exercise 1.
+Try typing a comment into the code chunk below.
+```{r comment, exercise=TRUE}
+
+
+```
+When you click **Run Code** nothing will happen which is exactly what we want in this case!
+
+You can also comment next to a line of code. For an example, try running this code chunk.
+```{r commentline, exercise=TRUE}
+This <- "is a line of code" #This is a comment that helps explain the code
+
+```
+
+
+##2.5 Console
+
+The console is a part of RStudio that can read and run the code but will not record the code that it runs.
+
+It is also a place where the output of some lines of code will appear.
+
+You can think of the Console as a place to play around. It is your R sandbox. You can test your code to make sure it is working and then copy that text into your file once you are satisfied with it.
+
+##2.6 Running Code
+
+In order for R to parse code, you must run the code.
+
+Running the code tells R that the code is ready to be read.
+
+There are a few different ways to run the code:
+
+Inside RStudio, in Rmd files (the type of file most commonly used in general chemistry) there is a button that says run at the top of the file. This will give you multiple options for how much will be run. In order for everything in the document to be parsed click **run all**. There is also a small green arrow that looks like a play button this will run only the current chunk.
+
+A quick way to run just a small portion of code is to highlight the code and tap **control enter** (**command return** for Mac users).
+
+##3.0 Introduction to Data Reporting
+
+This chapter steps away from coding and focuses on general data etiquette, it is also one of the most important chapters in this workbook since it introduces topics that will be fundamental to success in chemistry at Reed. 
+
+##3.1 Precision versus Accuracy
+
+In order to understand whether or not data is "correct," there are two measures we apply to the data: precision and accuracy.
+
+Precision is how reproducible an experiment is or how carefully an experiment was performed.
+
+A few things that can determine the precision of a value are:
+1. How close two or more of the same measurements are to each other.
+2. The instrument or glassware being used, more precise glassware.
+3. The number of significant figures more digits recorded indicates more precision (this will be explained in 3.2).
+
+Accuracy is how close the data is to a true or accepted value. 
+
+###Exercise 2.
+
+```{r precision}
+question("Which of these are precise (select all that apply)?",
+         answer("2 darts one hits the bullseye and one misses", message= "The darts are imprecise because they do not go in the same place."),
+         answer("1.23478",correct=TRUE, message= "1.23478 is precise because it has a lot of significant figures."),
+         answer("1.9, 2.0, 2.1, 2.2, 1.9", correct = TRUE, message = "The sequence of numbers is precise because the numbers are very close to each other." ),
+         answer("a player shoots 5 basketballs they all are thrown over the backboard", correct = TRUE, "The basketball portion is precise because all 5 basketballs go in the same place even if that is not the accurate place."),
+         answer("temperature of a water bath was recorded by all three members of a lab group at the same time: 50°C, 20°C, and 100°C", message= "The temperature recordings are imprecise because the numbers are drastically different from each other." ),random_answer_order = TRUE, allow_retry = TRUE
+         )
+```
+
+
+##3.2 Scientific Notation
+
+Scientific notation is a way of recording a number so that only the significant values are shown while staying on the same scale.
+
+In order to convert a number to scientific notation find the first nonzero digit in a number. 
+
+For .02345 the first non zero digit is $2$.
+
+###Exercise 3.
+
+```{r scientific, echo= FALSE}
+  
+question("What is the first non zero digit in 100.343?",
+    answer("<ins>**1**</ins>00.343", correct = TRUE, message = "Great job! This number's first nonzero digit is 1."),
+    answer("100.<ins>**3**</ins>43", message = "Digits before the decimal point could be the first nonzero digit."),
+    answer("100.34<ins>**3**</ins>", message= "Look for the first nonzero digit not the last."),
+    answer("I don't know", message = "Try rereading the previous text to understand. Also, a digit is a numeral 0-9 that forms a number."),
+    allow_retry = TRUE,
+    random_answer_order = TRUE
+  )
+
+```
+
+The next step is to move the decimal point to behind that first digit. In order to do so, count the possible decimal places in between where it is and where it needs to be, including the final decimal place. 
+
+For 100.343 the decimal must move two places to the left to get to the spot behind the 1. 
+
+###Exercise 4.
+
+```{r decimal, echo= FALSE}
+question("How many places does the decimal point have to move to be behind the first nonzero digit in .02345",
+    answer("2 places to the right",correct = TRUE, message = "Great Job the direction and digit are both correct."),
+    answer("2 places to the left", message = "The digit is correct, make sure that you move the decimal in the correct direction though."),
+    answer("1 place to the right", message= "Correct direction, but make sure you move the decimal far enough that it falls after the first nonzero digit"),
+    answer("1 place to the left", message = "Make sure you move the decimal far enough that it falls after the first nonzero digit, and check the direction again." ),
+    answer("3 places to the left", message= "Make sure the check the direction, and don't move the decimal too far. You want the decimal to fall directly after the first nonzero digit."),
+    answer("I don't know", message = "That's alright! Maybe another way of thinking about it could be helpful. Picture multiplying or dividing the number by 10, how many times would you have to multiply (right) or divide (left) the number to get to a version of the number that has one and only one digit before the decimal point."),
+    allow_retry = TRUE,
+    random_answer_order = TRUE
+  )
+```
+
+The next step is to multiply the newly transformed number by 10 to a factor of however many places the decimal must move. If the decimal moved right the factor will be negative, if the number moved left the factor will be positive.
+
+For $.02345$ the number becomes $2.345*10^{-2}$.
+
+###Exercise 5.
+
+Convert .0345 into scientific notation. Replace the blanks with the answer in the code chunk. (ex. scientific <- 2.345*10^{-2})
+
+```{r scientificNote-solution, exercise=FALSE}
+scientific <- 3.45*10^{-2}
+scientific
+```
+
+```{r scientificNote-check}
+
+scientificheckr <- function(USER_CODE){
+  code <- for_checkr(USER_CODE)
+  message1 <- "Be careful, click start over and re-enter the values. Make sure not to get rid of anything except the blanks when you enter the values."
+  message2 <- "Make sure that your output is equal to the starting value. Try re-counting how far the decimal point needs to move."
+  message3 <- "Great Job! Your scientific notation conversion is correct!"
+  result <- check_blanks(code,
+                         quote(scientific <- ..dig..*10^{..fac..}), 
+                         insist(dig == 3.45,"You should have one digit and one digit only before the decimal point."),
+                         passif(TRUE))
+  if(failed(result))
+    return(result)
+  
+  nexttest <- line_where(code, insist(Z=="scientific", message1),
+                         insist(V==.0345, message2), 
+                         passif(TRUE, message3))
+  return(nexttest)
+}
+
+scientificheckr(USER_CODE)
+```
+
+
+```{r scientificNote, exercise=TRUE}
+scientific <- ______ *10^{ _____ }
+scientific
+```
+
+Once finished click *Run Code*.
+
+##3.3 Significant Figures
+###3.3.1 Significant Figures with **Measured Quantities**
+
+Figures are the numerals (0-9) that form a number.
+
+Significance indicates how certain the accuracy in a number is. The number should indicate that there is certainty in all digits (figures) except the last figure. For instance when reading a graduated cylinder that has tick marks indicating every one-milliliter increase in volume the researcher is certain to the ones' place and the will record the number to the tenth place.
+
+This convention is important because when data is recorded not only can someone read the values, they can find concise input into how the data was recorded.
+
+There are five main rules for determining the significant figures in a <ins>measured quantity<ins/>:
+
+1. All nonzero digits are significant
+
+2. Zeroes between nonzero digits are significant
+
+3. Zeroes to the left of the first nonzero digits are not significant; such zeroes merely indicate the position of the decimal point
+
+4. Zeroes to the right of a decimal point in a number are significant
+
+5. When a number ends in zeroes that are not to the right of a decimal point, the zeroes are not
+necessarily significant
+
+*These rules come from* http://www.astro.yale.edu/astro120/SigFig.pdf
+
+One way to think of Sig-fig Zeros for measured quantities is to convert the number to Scientific Notation, if it is correct to keep the zero when converting to scientific notation then the figure is significant.
+
+###Exercise 6 part A.
+
+```{r quiz1, echo=FALSE}
+
+  question("How many Sig Figs does 3.5424 have?",
+    answer("5", correct = TRUE, message = "Great job! This number has 5 significant figures."),
+    answer("1", message = ""),
+    answer("4", message = ""),
+    answer("I don't know")
+  )
+```
+
+###Exercise 6 part B.
+
+```{r quiz2342342, echo=FALSE}
+  question("Which answers have 3 Sig Figs? (Select all that apply))",
+    answer("0.00321", correct = TRUE),
+    answer(".003", message = ".003 does not have three significant figures because the two zeros all appear before the first non-zero digit and therefore are insignificant."),
+    answer(".00321", correct = TRUE),
+    answer("0.001", message= "0.001 does not have three significant figures because the three zeros all appear before the first non-zero digit and therefore are insignificant."),
+    incorrect = "Incorrect"
+  )
+
+```
+
+
+###3.3.2 Significant Figures with **Rounding**
+
+When rounding, always round up for digits above 5 and down for digits below 5.
+
+It is rare that you will get a digit that is exactly 5 without and non zero digits following it and needs to be rounded. However, if this occurs round in the direction that will make the previous number even. For instance, 21.50000000 would be rounded to 22 whereas 20.50000000 would be rounded to 20. **If there is any digit after the 5 always round up** Thus 20.51 would be 21, not 20.
+
+###3.3.3 Significant Figures with **Addition and Subtraction**
+
+When adding and subtracting the number of Sig Figs is determined by the most precise common digit.
+
+The most precise digit in 1.2**3** is 3
+
+The most precise digit in 1.**2** is 2
+
+When adding 1.23 and 1.2 the output is 2.43, however, 1.2 is not precise to the hundredths' place and so the end product must be rounded to two significant figures ending in the tens place. 
+
+$$1.23 + 1.2 = 1.4$$
+Addition and Subtraction are the only ways to gain significant figures.
+
+
+
+The most precise digit in 1234 is 4, which is in the ones' place. 
+
+The most precise digit in 56 is 6, which is also in the ones' place. 
+
+When adding 1234 + 56, 1234 has 4 sig figs and 56 has 2 sig figs, however, the answer has 4 sig figs since it also must end in the one's place. 
+
+Try figuring out the answer to 1001-50.3, write the answer with the correct number of sig figs on the empty side of the arrow and then click **Run Code** (it won't look like it does anything) and **Submit Answer**.
+
+###Exercise 7.
+
+```{r subtractsig-check}
+
+sigcheckr <- function(USER_CODE){
+  code <- for_checkr(USER_CODE)
+  message1 <- "Be careful, click start over and re-enter the values. Make sure not to get rid of anything in the template"
+  message2 <- "Try again, either your sig figs and or your answer is incorrect. The answer should be 950.7, but with the correct number of sig figs and correct rounding."
+  message3 <- "Great Job! Your sig figs are correct as long as you did not include any zeros after 951."
+  
+  result <- check_blanks(code,
+                         quote(significant <- ..sig..),
+                         insist(signif(sig, digits=10) == signif(951, digits=10) ,message2),
+                         passif(TRUE))
+  if(failed(result))
+    return(result)
+  
+  nexttest <- line_where(code, insist(Z=="significant", message1),
+                         passif(TRUE, message3))
+  return(nexttest)
+}
+sigcheckr(USER_CODE)
+```
+
+```{r subtractsig, exercise=TRUE}
+significant <- 
+```
+
+  
+###3.3.4 Significant Figures with **Multiplication and Division**
+Multiplication and division have the same significant figure rules.
+
+*The answer to a multiplication or division calculation has the same number of significant figures as the least precise number in the calculation.*
+
+For instance:
+$$11.*5.=60$$
+Although this statement seems mathematically incorrect, it is correct *assuming that neither numbers are exact numbers*. 
+
+This is because, 11. has two sig figs and 5. has one sig fig, thus the answer can only have one significant figure.
+
+Here are some more examples of multiplication and division significant figures, assuming all non numbers are not exact numbers:
+
+$$.345/.445 = 0.775$$
+$$.45*3.98/7=0.3$$
+$$9800*.456= 45$$
+
+###3.3.5 Significant Figures with **Exact Numbers and Conversion Constants**
+
+Exact numbers are numbers that are known with <ins>complete certainty<ins/>.
+
+Most exact numbers are integers:
+
+1 mole, 23 Erlenmeyer flasks, etc. 
+
+Exact numbers are often used as conversions factors:
+
+1 mole Hydrogen per 1.01 grams Hydrogen, where 1 mole is an exact number
+
+**Exact numbers have infinite significant figures**.
+
+###Exercise 8.
+
+```{r exact, echo=FALSE}
+question("Which of these are exact numbers? (Select all that apply).",
+         answer("<in>3<ins/>. grams of solution"),
+         answer("3 burettes", correct= TRUE),
+         answer("1 mole", correct= TRUE),
+         answer("5*10^-1"),allow_retry=TRUE
+)
+
+```
+
+Since exact numbers have infinite significant figures they do not affect the significant figures in a calculation.
+
+For example if 6 is an exact number:
+
+$$6* 11.23 = 67.38$$
+
+###3.3.6 Significant Figures with **Exponents**
+
+Numbers that have exponents have two parts a mantissa and a character.
+
+The character is the part of the number that determines the magnitude (or scale). When looking at a number in exponent form it is the digit/s that are referred to as the exponent.
+
+The mantissa is the part of the number that determines the precision. When looking at a number in exponent form it is the digit/s that have the scale applied to.
+
+For the number $1.2*10^{-4}$ the mantissa is 1.2 and the character is $-4$.
+
+###Exercise 9.
+
+```{r Mantissa}
+question("For the number $4^5$ what is the mantissa, and what is the character?",
+         answer("4 is the mantissa, 5 is the character",correct=TRUE),
+         answer("5 is the mantissa, 4 is the character"),
+         answer("I don't know"),
+         answer("There is no character, and 4 is the mantissa"),random_answer_order = TRUE, allow_retry = TRUE)
+
+```
+
+####<ins>Sig Figs are only determined by the mantissa<ins/>
+
+Thus $1.2^{4}$ only has 2 sig figs and not three. 
+
+Another way to conceptualize this is to look at the expansion of this number: $$1.2^{4} = 1.2*1.2*1.2*1.2$$
+
+Multiplying a number with two significant figures by another number with 2 significant figures results in a number with 2 significant figures.
+
+When the exponent is attached to a number that the mantissa is being multiplied by the sig figs are also unaffected since the number multiplied by is considered an exact number.
+
+###3.3.7 Significant Figures with **Logarithms**
+
+Logs are a heavily used mathematical function in chemistry that brings a new challenge to Sig Figs. 
+
+*Note: If Logs are something that causes you math anxiety, Reed has many resources that can help. Specifically, Reed has free individual math coaching sessions with the quantitative skills coach in the DoJo, reach out to your chem professor or advisor to find more information.*
+
+#####<ins>Mantissa and Characteristics<ins/>
+
+In order to understand the sig figs of a log let's look at the equation for pH. 
+
+pH = -log[H] 
+
+In order to calculate pH, we plug in a number (ex. $1.00*10^{-5}$) to the equation
+
+$-log(1.00*10^{-5})= 5.000$ This means 5.000 has three sig figs not four since the 5 is the characteristic.
+
+
+###3.3.8 Significant Figures with **Error and Relative Standard Deviations**
+
+**Error should only be recorded to one significant figure. **
+
+for instance, if the output of a calculation is 2.345 ± .23 the answer should be recorded as $2.3 ± .2$.
+
+The reason behind this is that if you are uncertain whether it is ± .2 then it is contradictory to record more than one sig fig since the last significant figure is the digit with uncertainty. This also means that the number that the error is applied to, in this case, $2.345$, can only be as precise as the error which is why you round to $2.3$.
+
+**RSD or Relative Standard Deviation is an exception to the rule and should always be recorded to two sig figs.**
+
+
+###3.3.9 Significant Figures in **R**
+
+R will not record numbers with the correct number of significant figures. There are ways to edit the code to get the correct sig figs in the output however it is beyond the scope of this class. 
+
+Once the document is exported into word make sure to edit any figures so that they contain the correct number of significant figures. 
+
+###3.3.10 Systematic Error verses Random Error
+
+Systematic Error is an error that occurs in a single direction. 
+
+Random Error is an error that occurs in both directions. 
+
+An example source of random error is fluctuations in temperature. 
+
+An example source of systematic error is when titrating always detecting the endpoint after the color appears which will be slightly past the actual endpoint.
+
+Human errors are not systematic nor random errors. Human errors should not be recorded in lab reports, instead, repeat the portion of the lab in which a human error occurred.
+
+##3.4 Unit Conversions
+
+For constants used in conversions always choose to use a constant that has more significant figures than the least precise number in the conversion.
+
+For instance, a commonly used conversion factor is $6.0221409*10^{23}mol^{-1}$ otherwise known as Avogadro's number. 
+
+A common sig fig error is when converting atoms to moles:$$14.234 atoms *6.02*10^{-23}moles/atom$$ 
+when it should be$$14.234 atoms *6.02214*10^{-23}moles/atom$$ so that the non-conversion factor limits the sig figs.
+
+##3.5 Citation
+
+There is no format that will consistently be considered correct. This section is specific for just general chemistry at Reed. 
+
+**Most chemists use a form of ACS formatting.**
+
+Formatting by number
+
+In text/Line, citations should look like: "The molar mass of Iron is 54.284 g/mol (1)." Where the number in parentheses corresponds to the citation in the reference section
+
+This is a template that can be followed when writing citations in a lab report.
+
+**1. last name, Initial.; last name, Initial. Title. Italics Journal abbreviation. year bold, Journal number, pages.**
+
+If its a journal accessed online next to journal [online] and at the end link then (accessed date) 
+
+In order to create a correct citation use the ACS Style Guide [https://pubs.acs.org/doi/pdf/10.1021/bk-2006-STYG.ch014]
+
+
+
+##4.0 Inputting Data into R.
+
+This chapter will introduce inputting data points into R. Pieces of this chapter will be fundamental to using R regardless of whether or not you are analyzing your own data. 
+
+##4.1 Assignment
+
+
+All data analysis in Chemistry requires the transfer of the data from the instrument where it was obtained (for example a digital table from an instrument or a physical list from your notebook) into the R environment.
+
+
+To begin with, we are going to start with manual insertion of data.  In order to create a set of data, you need to create a vector. A vector is used in R to essentially mean variable or list of variables. The two names will often be used interchangeably.
+
+All vector assignments have the same format:
+
+`object_name <- value`
+
+or 
+
+`object_name = value`
+
+When referring to R assignment throughout general chemistry `<-` is the more common form of assignment because arrows always refer to assignment whereas equal signs sometimes are used for other purposes. *Note that `->` will not work.*
+
+Object names have a few rules:
+
+1.  Start with a letter (not a number)
+2.  Do not use symbols
+3.  Connect words with an underscore (Ex.  Fe2_Concentration)
+4.  Capitalization matters
+
+### Exercise 10.
+
+Write the R code to create a vector, with the name Temp, for the temperature of your reaction, which is 25&deg;C:. For this exercise only use `<-` and not `=` to assign Temp.
+
+```{r first-check}
+TempCheck <- function(USER_CODE){
+  code <- for_checkr(USER_CODE)
+  message1 <- "Although any object name that follows the four rules technically works, in this case we are looking for a specific vector, Temp, and not {{Z}}."
+  message2 <- "Make sure that you input the data value, 25, correctly."
+  message3 <- "Great job! You successfully entered your first data value into R."
+  result <- line_where(code, insist(Z=="Temp",message1), failif(V!=25, message2),passif(V==25, message3))
+  return(result)
+  }
+TempCheck(USER_CODE)
+```
+
+```{r first, exercise=TRUE}
+
+```
+
+
+```{r first-solution}
+Temp <- 25
+
+```
+
+
+Now you can use this named variable in future code.  You can also see the result of the vector by typing the name of the variable into the console. For the purpose of this workbook, the variables will be reset after each code chunk, in order to reuse a variable you must redefine it for each exercise.
+
+##4.2 Lists
+
+Many times we create lists of data.  For example, you may be measuring the temperature of a water bath and write the following list in your lab notebook:
+
+```{r, results='asis'}
+Time <- c(0, 5, 10, 15, 20, 25, 30, 35)
+Temperature <- c(25, 27, 29 , 30, 32, 36, 38, 45)
+Temp <- data.frame(Time, Temperature)
+chem_table(Temp, "Table 1: Temperatures (&deg;C) of waterbath over a 35 minutes time interval on medium heat.")
+```
+
+To input this data into the R environment as a named variable, you can create a column of data using the combine function `c()`.  For example, creating the column of time would look like this: `Time <- c(0, 5, 10, 15, 20, 25, 30, 35)`
+
+### Exercise 11.
+
+The time data has been added.  Now you create the Temperature variable and view both of them by re-typing the names of the variables each on seperate blank lines of code. 
+
+```{r column-solution}
+Time <- c(0, 5, 10, 15, 20, 25, 30, 35)
+Temperature <- c(25, 27, 29 , 30, 32, 36, 38, 45)
+Time
+Temperature
+```
+
+Click **Solution**  to see one possible way of completing the exercise. Make sure that there are two outputs before continuing 
+
+```{r column, exercise=TRUE}
+Time <- c(0, 5, 10, 15, 20, 25, 30, 35)
+```
+ 
+
+##4.3 Creating a Data Frame
+
+###4.3.1 What is a data frame?
+ 
+A data frame is essentially a rough table that allows us to keep track of our raw data and will not be recorded in the final lab report. 
+
+In a more technical sense, data frames are a type of two dimensional data structure. This essentially means that dataframes have both columns and rows.
+
+Data frames must:
+
+1. Have the same number of rows in each column 
+2. Have the same number of columns for each row
+3. Have a minimum of one column of data
+4. Have variable names that match the columns
+5. Only include units as comments 
+
+If you wanted to record data across five trials for temperature, mass, and color you could create a data frame with 5 rows and three columns: 
+
+First you would create columns of data for each category and each trial.
+*When creating the columns make sure to input the data in an order that is consistent, in this case the columns indicate that trial one had a temp of 23 a mass of 2 and blue color.*
+`temp <- c(23,24,10,19,18)`
+`mass <- c(2,3,4,1,4)`
+`color <- c("blue", "green", "blue", "blue", "green")`
+
+Next you combine the columns into a data frame using the `data.frame()` function.
+` experiment <- data.frame(temp,mass,color)`
+
+A data frame is a lot like a lab notebook table, except data frames do not keep track of significant figures nor units. R does not allow units inside the list of data points.
+
+####Here is an example of a data frame from a lab on Iron Absorbtivity:
+
+```{r}
+#This Code Chunk is for an example 
+Iron <- c(0,.717,1.43,3.5,7.17) #grams
+Absorbance <- c(0,.085,0.17,0.41,0.85) #Absorbance units
+Iron_dataframe <- data.frame(Iron, Absorbance)
+Iron_dataframe
+```
+
+###Exercise 12.
+This exercise recreates the data frame example using the `data.frame()` function
+
+```{r dataframe_exercise-solution}
+
+Iron <- c(0,.717,1.43,3.5,7.17) #grams
+Absorbance <- c(0,.085,0.17,0.41,0.85) #Absorbance units
+Iron_dataframe <- data.frame(Iron, Absorbance)
+Iron_dataframe
+
+```
+
+1. Replace the first blank with a variable name
+2. Replace the second blank with the symbol that assigns something to a vector 
+3. Replace the third blank with a different variable name
+4. Surround the second list of numbers with the concatenation function `c()`
+5. Add the two variable names assigned in steps 1 and 2 to the blanks in the `data.frame()` function
+6. Print the data frame by retyping the name of the data frame `Iron_dataframe` on to an empty line of code
+
+*Note that the green `#comments` do not affect how the computer runs the code, they just allow the author to further understand what the data represents.*
+
+```{r dataframe_exercise, exercise = TRUE, exercise.cap="Data Frame"}
+_____ ___ c(0,.717,1.43,3.5,7.17) #Iron mass in grams
+_____  <- 0,.085,0.17,0.41,0.85 #Absorbance in AU
+Iron_dataframe <- data.frame(_____,_____)
+
+```
+
+Once finished click **Run Code** to see the finished data frame and then click **Solution** to see one possible way of completing the exercise.
+ 
+##5.0 Introduction to Mathematical Manipulation.
+
+R is essentially a fancy graphing calculator, not unlike a TI graphing calculator, because of this R can be used to perform mathematical calculations.
+
+R follows the basic order of operations: P.E.M.D.A.S.
+
+##5.1 Addition, Subtraction, Multiplication, Division 
+
+When starting out with a basic calculation type the equation into the code chunk and hit run.
+ *Note that in RStudio the answer will appear in the console and not directly below the code chunk*
+
+###Exercise 13. 
+
+Let's start with a simple addition calculation.
+
+Try typing 25 + 273 into the console and click **Run Code** to see the output, and click **Submit Answer** to check that your input is correct.
+
+```{r mathsub}
+checkmath<- function(USER_CODE,ans,math){
+  code <-for_checkr(USER_CODE)
+  message1 <- "Great, you have just written a line of code that outputs the answer ({{V}}) that we wanted!"
+  message2 <- "Are you sure you inputted the calculation correctly, the output is currently {{V}}?"
+  message3 <- "Don't forget to input the whole line of code, you need to perform a calculation not just put an answer. "
+  
+  result <- line_where(code, insist(F==math, message3 ),failif(round(V,2)!=round(ans,2), message2 ), passif(round(V)==round(ans), message1))
+  return(result)
+}
+
+```
+
+```{r addition-check, exercise = FALSE, exercise.setup="dataframe", error = FALSE}
+checkmath<- function(USER_CODE,ans,math){
+  code <-for_checkr(USER_CODE)
+  message1 <- "Great, you have just written a line of code that outputs the answer ({{V}}) that we wanted!"
+  message2 <- "Are you sure you inputted the calculation correctly, the output is currently {{V}}?"
+  message3 <- "Don't forget to input the whole line of code, you need to perform a calculation not just put an answer. "
+  
+  result <- line_where(code, insist(F==math, message3 ),failif(round(V,2)!=round(ans,2), message2 ), passif(round(V)==round(ans), message1))
+  return(result)
+}
+
+checkmath(USER_CODE,298, "+")
+```
+
+```{r addition, exercise=TRUE, exercise.setup=FALSE,error=FALSE}
+
+```
+
+
+```{r SigFigAdd, echo=FALSE}
+question("What is the correct number of significant figures from the exercise?",
+         answer("300", message="The answer should have 3 sig figs not one. The most precise common place is the ones place for this calculation."),
+         answer("3.0*10^2", message="This is answer has 2 sig figs, the correct answer has 3 sig figs."),
+         answer("300.", message="Although this answer has three sig figs, the answer is incorrect since too much rounding has occured."),
+         answer("298", correct=TRUE, message="Great Job. Sig Figs for addition rely on the most precise common place (the ones place for this answer)."),
+         allow_retry = TRUE, 
+         random_answer_order = TRUE
+         )
+```
+
+
+###Exercise 14.
+
+Let's try a simple subtraction calculation.
+
+Write the code that you would use to determine how much of the solution was used if you started out with 100.5 mL and now you have 10. mL. **Submit Answer** when you are finished
+
+```{r subtraction-check, exercise = FALSE, exercise.setup="dataframe", exercise.caption = "Line if Best Fit", error = FALSE}
+checkmath<- function(USER_CODE,ans,math){
+  code <-for_checkr(USER_CODE)
+  message1 <- "Great, you have just written a line of code that outputs the answer ({{V}}) that we wanted!"
+  message2 <- "Are you sure you inputted the calculation correctly, the output is currently {{V}}?"
+  message3 <- "Don't forget to input the whole line of code, you need to perform a calculation not just put an answer. "
+  
+  result <- line_where(code, insist(F==math, message3 ),failif(round(V,2)!=round(ans,2), message2 ), passif(round(V)==round(ans), message1))
+  return(result)
+}
+
+checkmath(USER_CODE,ans=90.5,math="-")
+```
+
+```{r subtraction, exercise=TRUE, exercise.setup=FALSE,error=FALSE}
+
+```
+
+```{r SigFigCheck}
+question("Rewrite the amount of solution used with the correct units and sig figs",
+         answer("<ins>90.5 mL<ins/>", message="Watch your sig figs when subtracting you want to record the most precise place that the numbers have in common, Great job on units though."),
+         answer("<ins>90.5 ML<ins/>", message="Uppercase ML stands for Megaliters not Milliliters. Also, watch your sig figs when subtracting you want to record the most precise place that the numbers have in common."),
+         answer('<ins>90<ins/>.<ins/> <ins>ML', message="Uppercase ML stands for Megaliters not Milliliters, Great job on sig figs though!"),
+         answer('<ins>90<ins/>.<ins/> mL', correct=TRUE,message="Great job, both the Sig Figs and the units are correct."),
+        allow_retry = TRUE, random_answer_order = TRUE
+         )
+```
+
+###Exercise 15.
+
+The symbol for multiplication is `*` and the symbol for division is `/`
+
+
+The next exercise will combine multiplication, division, and addition. Remember that R adheres to the order of operations when performing complex calculations.
+
+
+Write the code that you would use if you were to calculate the total amount of Iron used for an entire experiment in *grams* if you were to use 56.1 mg per trial for 7 trials and 1.1 grams in the last trial. Remember that there are 1000 milligrams in one gram.
+
+```{r md-check, exercise = FALSE, exercise.setup="dataframe", error = FALSE}
+checkmath2<- function(USER_CODE,ans){
+  code <-for_checkr(USER_CODE)
+  message1 <- "Great, you have just written a line of code that outputs the answer ({{V}}) that we wanted!"
+  message2 <- "Are you sure you inputed the calculation correctly, the output is currently approximately {{V}}?"
+  result <- line_where(code, insist(round(V)!=1493, message = "Make sure to record the answer in grams not milligrams." ), failif(round(V,2)==round(393.8,2), message= "Pay attention to unit conversions!"),failif(round(V,2)!= round(ans,2),message2), passif(round(V,2)==round(ans,2),message1))
+  
+  return(result)
+}
+
+#This is a successful workaround for the issue with long decimal points
+
+checkmath2(USER_CODE, ans= 1.4927)
+```
+
+```{r md, exercise=TRUE, exercise.setup=FALSE, exercise.caption ="Addition Calculation" ,error=FALSE}
+
+```
+
+```{r SigFigCheckmd}
+question("Rewrite the amount of solution used with the correct units and sig figs",
+         answer("1.49 grams", message="The limiting number has 3 sig figs"),
+         answer("1 grams", message="There should be more than one significant figures. Remember that exact numbers do not affect sig figs."),
+         answer("2 grams", message="Rounding incorrect and sig figs incorrect."),
+         answer("1.493 grams", message="The answer needs less than four sig figs"),
+         answer("1.5 grams", correct=TRUE, message= "Great Job the answer should have 2 Sig Figs!"),
+        allow_retry = TRUE, random_answer_order = TRUE)
+```
+
+##5.2 Logarithms and Exponents
+
+Logarithms and exponents work similarly to other mathematical conversions.
+
+Logarithms in R are automatically base e, not base 10. The function `log()` is really a natural log function. In order to calculate logarithms with a base 10, use the function `log10()`.
+
+exponents are depicted using the `^` symbol. It is also important to contain everything within an exponent in parenthesis.
+
+###Exercise 16.
+
+For this exercise calculate 5.022 to the -1.3 power.
+
+
+```{r exp-check, exercise = FALSE, exercise.setup="dataframe", error = FALSE}
+
+checkmath<- function(USER_CODE,ans){
+  code <-for_checkr(USER_CODE)
+  message1 <- "Great, you have just written a line of code that outputs the answer ({{V}}) that we wanted!"
+  message2 <- "Are you sure you inputed the calculation correctly, the output is currently {{V}}?"
+  result <- line_where(code,
+                       failif(round(V,2)!= round(ans,2),message2), passif(round(V,2)==round(ans,2),message1))
+  return(result)
+}
+
+checkmath(USER_CODE, ans= 0.1227)
+```
+
+```{r exp, exercise=TRUE, exercise.setup=FALSE, exercise.caption ="Addition Calculation" ,error=FALSE}
+
+
+```
+
+
+<!-- Eventually, these chapters will have a sig fig check
+
+```{r exp_sig}
+question("Rewrite the answer with the correct number of sig figs",
+         answer(".123", message="The mantissa should have 3 significant figures but the answer should also include a character."),
+         answer(".122768", message="Exponants have a limited number of sig figs that are dependent on the mantissa."),
+         answer(".12277", correct=TRUE, message= "Oddly enough, this is the correct number of sig figs."),
+        allow_retry = TRUE, random_answer_order = TRUE)
+```
+
+How many sig figs did the answer have?
+
+```{r expsignum, exercise=TRUE, exercise.setup=FALSE, exercise.caption ="Addition Calculation" ,error=FALSE}
+
+
+```
+
+-->
+
+```{r expsignum-check}
+weirdchecker <- function(USER_CODE){
+  code <- for_checkr(USER_CODE)
+  m1= "The first 2 digits are considered the character/characteristic they do not count towards the number of significant figures"
+  m2= "Great job, The sig figs are correct, because the first 2 digits are considered the character/characteristic they do not count towards the number of significant figures."
+  m3= "Whoops, not the correct number of significant figures, try again."
+  #try <- if_empty_submission(code, m1) Later possibly add a hint function
+  result <- line_where(code, insist(V!=5, m1), passif(V==3, m2), failif(V!=3, m3) )
+}
+weirdchecker(USER_CODE)
+```
+
+
+```{r log-check, exercise = FALSE, exercise.setup="dataframe", error = FALSE}
+
+checkmath2<- function(USER_CODE,ans){
+  code <-for_checkr(USER_CODE)
+  message1 <- "Great, you have just written a line of code that outputs the answer ({{V}}) that we wanted!"
+  message2 <- "Are you sure you inputed the calculation correctly, the output is currently {{V}}?"
+  result <- line_where(code,
+                       failif(round(V,2)!= round(ans,2),message2), passif(round(V,2)==round(ans,2),message1))
+  return(result)
+}
+
+checkmath2(USER_CODE, ans=0.7596678)
+```
+
+
+ <!-- Eventually these chapters will include a sig fig check 
+```{r log, exercise=TRUE, exercise.setup=FALSE, exercise.caption ="Addition Calculation" ,error=FALSE}
+
+```
+
+```{r log_sig}
+
+question("Rewrite the answer with the correct number of sig figs, and state the number of sig figs the answer has.",
+         answer("", message=""),
+         answer("", message=""),
+         answer("", message=""),
+         answer("", message=""),
+         answer("", correct=TRUE, message= ""),
+        allow_retry = TRUE, random_answer_order = TRUE)
+```
+
+-->
+
+
+##6.0 Mathematically Transforming Data. 
+
+Mathematically manipulating data works very similarly to the previous chapter. 
+
+This is a very useful task that R can perform because it eliminates tedious calculations.
+
+##6.1 Calculations with Datasets and Integers
+
+Because R can keep track of large data inputs as vectors, R can also perform calculations on data sets.
+
+When preforming a calculation on a data set R applies the calculation to each data point individually
+
+For Example:
+
+`data_list_name<- c(1,2,3)`
+
+`variable_name <- data_list_name + 27`
+
+`data_list_name`
+
+`variable_name`
+
+This example will print two data sets; the first with the initial values and the second with the values after having 27 added to them.
+
+### Exercise 17.
+
+For this exercise, we will look at a common issue in chemistry. Thermometers generally report temperature Celsius. However, in order to perform calculations in chemistry, it is often necessary to convert to Kelvin. 
+
+In order to convert a data set to Kelvin add 273.15 to every value in the dataset individually.
+
+R can do this quickly by typing the name of the list of data and adding 273.15.
+
+Make sure to also assign this to a variable name and then print both variable names (by typing each name individually on its own line of code) to compare.
+
+
+```{r kelvin-solution, echo= FALSE}
+Temp_celsius <- c(31.2,45.3,30.2,30.5,21.3,34.8,29.6, 41.5)
+Temp_kelvin <- Temp_celsius + 273.15
+Temp_celsius
+Temp_kelvin
+```
+
+```{r kelvin, exercise=TRUE}
+Temp_celsius <- c(31.2,45.3,30.2,30.5,21.3,34.8,29.6, 41.5)
+Temp_kelvin <- 
+```
+
+Click **Run Code** and **Solution** when finished.
+
+This same task can be performed in many different contexts, with all different types of mathematical operators.
+
+##6.2 Calculations with Multiple Data Sets
+
+Another useful skill is that R can perform calculations using multiple data sets as long as both data sets have the same number of inputs.
+
+###Exercise 18. 
+
+Calculate the volume remaining from this experiment by subtracting the list of ending volumes from the list of starting volumes. Print the vector when finished, by retyping the name on a new line. 
+
+
+```{r volumecalc-solution, echo= FALSE}
+Starting_Volume <- c(31.2,45.3,30.2,30.5,34.8,50.8,140.9)
+Ending_Volume <- c(2.4,3.5,5.8,9.9,10.7,2.4,98.7)
+Volume <- Starting_Volume - Ending_Volume
+Volume
+```
+
+```{r volumecalc, exercise=TRUE}
+Starting_Volume <- c(31.2,45.3,30.2,30.5,34.8,50.8,140.9)
+Ending_Volume <- c(2.4,3.5,5.8,9.9,10.7,2.4,98.7)
+Volume <- 
+```
+Click **Run Code** and **Solution** when finished.
+
+This also works for all types of mathematical operators so long as the strands are the same length. The numbers will be paired together at each index. 
+
+
+##7.0 Data Visualization.
+
+This chapter introduces lab report quality data visualization methods, and how to extract information from data visualizations.
+
+Before beginning this chapter you should be comfortable inputting data into R and manipulating data frames. 
+
+After this chapter, you should be able to use the `chemistr` package to create report quality data visualizations. 
+
+It is important to note that `chemistr` is not the only method of data visualization. One of the fundamental packages used for data visualization is `ggplot2`. This chapter will not cover how to use ggplot to customize plots. [https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf].
+
+```{r, echo=FALSE}
+#This Code Chunk is for an example 
+Iron <- c(0,.717,1.43,3.5,7.17) #grams
+Absorbance <- c(0,.085,0.17,0.41,0.85) #Absorbance units
+Iron_dataframe <- data.frame(Iron, Absorbance)
+
+```
+  
+```{r dataframe2, echo=FALSE}
+#This Code chunk will be referenced to set up future exercises
+Iron <- c(0,.717,1.43,3.5,7.17)
+Absorbance <- c(0,.085,0.17,0.41,0.85)
+Iron_dataframe <- data.frame(Iron, Absorbance)
+```
+
+##7.1 Creating a Report Quality Table 
+
+There are many different ways to create a report quality table, introductory chemistry at Reed uses `chem_table(data.frame, caption="")`
+to make consistent professional appearing tables. 
+
+In order to use `chem_table()` there are two necessary inputs:
+
+1. a previously assigned data frame
+2. caption = a caption in quotation marks
+
+Caption writing is a skill that will be heavily developed in general chemistry, it allows a figure to stand alone while staying concise, for now, we will just put "The caption will go here." instead.
+
+
+####Here is an example of a properly formatted table in R syntax:
+
+```{r}
+Table <- chem_table(Iron_dataframe, caption= "Table 1. The caption will go here.")
+```
+
+The table will appear in the correct format once the R document is exported to Word:
+
+```{r, results= 'asis'}
+Table <- chem_table(Iron_dataframe, caption= "Table 1. The caption will go here.")
+```
+
+*Once exported to word make sure to edit the values to have the correct number of sig figs and units, before submitting the Lab Report.*
+
+###Exercise 19.
+
+The next exercise builds a report worthy table. 
+
+In order to complete the exercise replace the three blanks with the proper inputs needed to create a table using `chem_table()` and the data frame named `Iron_dataframe` (Make sure to remember capitalization). 
+
+<!--
+THis function doesnt work
+```{r Report_Quality_Table-check, exercise.setup = "dataframe"}
+capitalization <- function(USER_CODE) { 
+  code <- for_checkr(USER_CODE)
+  result <- check_blanks(code,
+                         quote(..chem..(..data.., caption= "Table 1. The caption will go here.")),
+                         insist(same_name(chem, "chem_table"), message="Make sure that you are using the correct table creating function"),
+                         insist(same_name(data, "Iron_dataframe"), message = "Make sure you are spelling Iron_dataframe correctly and that you are capitalizing the `I`."),
+                         passif(TRUE, return(message = "Great Job!")))
+}
+
+capitalization(USER_CODE)
+```
+-->
+
+
+  
+```{r Report_Quality_Table, exercise= TRUE, exercise.setup = "dataframe2", exercise.cap= "Report Quality Table", exercise.completion=TRUE}
+________(________,________= "Table 1. The caption will go here.")
+```
+
+Once finished click **Run Code** to see the finished table and then click **Solution** to see a possible way of completing the exercise.
+
+<!--Decided not to use a code checking function here. Could be added later if needed. Should be a simple check_blanks function. -->
+
+```{r Report_Quality_Table-solution}
+chem_table(Iron_dataframe, caption= "Table 1. The caption will go here.")
+```
+
+##7.2 Creating a Scatter Plot
+
+Just as there are many different ways to create a table there are even more ways to create a scatter plot.
+
+Reed Chemistry currently uses `chem_scatter(data.frame, xvar, yvar, xlab, ylab, intercept)` because it combines many complex `ggplot2` functions to create one concise function.
+
+In order to use `chem_scatter()` there are six necessary inputs:
+
+1. data = Data_frame_Name
+2. xvar = Name_of_column_in_Data_frame
+3. yvar = Name_of_another_column_in_Data_frame
+4. xlab = "String with the label for the x variable (with units)", 
+5. ylab = "String with the label for the y variable (with units)",
+6. intercept = an integer
+
+####This is an example of a scatter plot output:
+
+```{r}
+chem_scatter(data = Iron_dataframe, 
+             xvar = Iron, 
+             yvar = Absorbance, 
+             xlab = "[Iron](µM)", 
+             ylab = "Absorbance at 508 nm",
+             intercept = 0)
+```
+
+### Exercise 20.
+
+This exercise recreates the example scatter plot and checks your knowledge on R syntax.
+
+(@) Surround the inputs with the `chem_scatter()` function (using the first and last blanks)
+    - Hint: Make sure to enclose the function inputs with parentheses 
+(@) Fill in the remaining six blanks with the inputs
+(@) Check to make sure that each of the input phrases `input= something` is separated by a comma. (*The last phrase should not be followed by a comma*)
+    - Hint: There are 2 commas missing
+(@)  Make sure that quotation marks are around both of the strings 
+    - Hint: One of the strings is missing a set of quotation marks
+(@) Check to see if the Scatter Plot code will run by clicking the **Run Code** button
+
+<!-- Here is an attempted checking code, Decided not to use a checkr for the time being. Might decide to add one later if I can figure out how to write a check blanks code for a long code chunk      
+```{r Scatter-check, echo=FALSE}
+
+Whynot <- function(USER_CODE){
+  code <- for_checkr(USER_CODE)
+  message1 <- "You didn't do the thing!"
+  message2 <- "You did the thing!"
+  message3 <- "Great Job! Your sig figs are correct"
+  
+  result <- check_blanks(code,
+                         quote({..chem_scatter..;..equals.. = Iron_dataframe; ..xvar.. = Iron; ..yvar.. = Absorbance; ..xlab.. = "[Iron] (µM)"; ..ylab.. = "Absorbance at 508 nm"; ..intercept.. "0"; ..parenthesis..}), 
+                         insist(equals == "=" ,message2),
+                         passif(TRUE))
+  if(failed(result))
+    return(result)
+}
+
+Whynot(USER_CODE)
+
+```
+-->
+
+
+```{r Scatter, exercise= TRUE, exercise.setup = "dataframe2", exercise.cap= "Scatter Plot", exercise.completion=TRUE}
+____________ ____ = Iron_dataframe 
+              ____ = Iron, 
+              ____ = Absorbance, 
+              ____ = "[Iron] (µM)"
+              ____ = Absorbance at 508 nm,
+              ___________ = 0 __
+```
+
+```{r Scatter-solution}
+chem_scatter(data = Iron_dataframe, 
+             xvar = Iron, 
+             yvar = Absorbance, 
+             xlab = "[Iron](µM)", 
+             ylab = "Absorbance at 508 nm",
+             intercept = 0) 
+```
+
+
+
+##7.3 Extracting Data from Scatter Plots
+
+After creating a scatter plot the next step is to extract data from the line of best fit in order to find the equation of the line. 
+This is done using the `lm(yvar ~ xvar + intercept, data = Data_Frame)` and `summary(fit)` functions.
+
+In order to use the `lm()` (linear model) function there are four inputs:
+
+1. `yvar` must be replaced with the name of the y variable.
+2. the `xvar` must be replaced with the name of the x variable.
+3. the `intercept` must be replaced with the integer value of the intercept
+4. `data = Name_of_Data_Frame`
+
+####The output of this function is a bit hard to read but contains a lot of useful information:
+
+```{r}
+fit <- lm(Absorbance ~ Iron + 0, data = Iron_dataframe)
+summary(fit)
+```
+
+For the purposes of general chemistry, there are two values generally needed from this output: slope and the standard error
+
+To find these variables look under *Coefficients*. 
+
+*Estimate* is the slope and *Std. Error* is the standard error.
+
+**Note that the standard error will never have more than one significant figure**
+
+### Exercise 21.
+
+This next exercise will extract the line of best fit from the previously made scatter plot using the data frame `Iron_dataframe`, xvar= `Iron`, yvar= `Absorbance`, and intercept = `0`.
+
+1. Assign the `lm()` function to a vector (ex. fit)
+2. Insert the `yvar ~ xvar + intercept` piece of the function.
+3. Insert the `data= Name_of_Data_Frame` piece of the function.
+4. Call the `summary()` function on the vector that you assigned the linear model function to. 
+- Hint: Make sure to do this on a new line of code.
+5. Click **Run Code** and then click **Submit Answer** when finished.
+
+
+```{r Line-check, exercise = FALSE, exercise.setup = "dataframe2", exercise.caption = "Line if Best Fit", error = FALSE}
+Iron <- c(0,.717,1.43,3.5,7.17)
+Absorbance <- c(0,.085,0.17,0.41,0.85)
+Iron_dataframe <- data.frame(Iron, Absorbance)
+
+check_line8 <- function(USER_CODE) { 
+  code <- for_checkr(USER_CODE) 
+  sponge1 <- "The answer is correct, Great Job!"
+  message2 <- "You forgot to print."
+  message3 <- "You switched the xvar and yvar"
+  message4 <- "Make sure to add in the names of the variables, don't just use the template."
+  
+  result <- line_where(code, passif(F=="lm", sponge1))
+  return(result) 
+}
+
+check_line8(USER_CODE)
+```
+
+```{r Line, exercise=TRUE, exercise.setup = "dataframe2", exercise.caption= "Line of Best Fit", error=FALSE}
+
+```
+If you get stuck click **Solution** to see one way of completing this exercise.
+
+```{r Line-solution, exercise = FALSE,exercise.setup = "dataframe2", exercise.caption = "Line if Best Fit", error = FALSE}
+fit <- lm(Absorbance ~ Iron + 0, Iron_dataframe)
+summary(fit)
+```
+
+### Exercise 22.
+```{r equation, echo=FALSE}
+question("What is the slope and standard error of the line from Exercise 36? ",
+  answer("Slope= .118300 Standard Error= .000277", message= "Close, but remember there is only one sig fig on standard error!"),
+  answer("Slope= .0003 Standard Error= .1183", message= "The sig figs look great, but the slope and standard error are switched"),
+  answer("Slope= .1183 Standard Error= .0003", correct = TRUE, message="Great Job with Sig Figs and finding the answer"),
+  answer("Slope= .00027 Standard Error= .118300", message= "The slope and standard error are switched, and there should only be one sig fig for standard error"), allow_retry=TRUE, random_answer_order=TRUE)
+
+#Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```
+
+
+##8.0 Statistical Analysis of Data.
+
+Precursors to Chapter 8:
+
+  1. Data Frame Creation
+  2. Vector Assignment
+  3. Mathematical Manipulation of Data
+  4. Report Quality Table
+
+This chapter is quite similar to Chapter 5: Mathematical Manipulation, both chapters take raw data and output useful new data information.
+
+Statistical Analysis is a very broad term; this chapter will focus on the statistics that are most useful for General Chemistry at Reed. 
+
+Before starting any sort of statistical analysis make sure to input the raw data into R as a data frame using the concatenate `c()` and data frame `data.frame()` functions. 
+
+####For this chapter we will be using a data frame from a lab on crystal synthesis and composition:
+
+```{r Green}
+#Creating a Data Frame
+Potassium_mass <- c(26.1, 25.2, 24.09, 22.5, 25.8, 24.14, 23.05)
+Iron_mass <- c(10.6, 10.8, 9.85, 11.6, 10.05, 10.8, 11.26)
+Crystal <- data.frame(Potassium_mass,Iron_mass)
+Crystal
+
+```
+
+
+##8.1 Function based Statistics
+
+One of the primary benefits to using R instead of a standard TI Graphing calculator is that R allows you to put new data points into calculations someone else has already completed.
+
+There are four main vectors that need to be assigned for general statistical analysis:
+
+1. A list of data (data)
+2. The average of the data (avg)
+3. The standard deviation of the data (sd)
+4. The number of data entries (n)
+
+The reason these functions are great to start with is that each of them has a concise previously written function that can be used to calculate and assign them:
+
+1. Input the data vector into `mean()` and assign the function to a vector
+2. Input the data vector into `sd()` and assign the function to a vector
+3. Input the data vector into `length()` and assign the function to a vector
+
+Note that assigning these vectors won't show a visible output, in order to see the output either print the value, create a table or assign it to a data frame.
+
+Here is a data frame output from these four vectors in regards to Potassium
+
+```{r green_function_stats}
+# Mean, SD, n
+
+Potassium_mean <- mean(Potassium_mass)
+Potassium_sd <- sd(Potassium_mass)
+Potassium_n <- length(Potassium_mass)
+
+Crystal_functioning_stats <- data.frame(Potassium_mean,Potassium_sd, Potassium_n)
+Crystal_functioning_stats
+```
+
+###Exercise 23. 
+
+Create a similar data frame using the statistics in regards to Iron instead.
+
+Fill in the blanks with the correct functions and vectors.
+
+*Start by concatenating the mass of Iron data.*
+
+```{r Iron_function_stats, exercise=TRUE}
+Iron_mass <- ____(10.6, 10.8, 9.85, 11.6, 10.05, 10.8, 11.26)
+Iron_mean <- __(___________)
+Iron_sd <- ____(___________)
+Iron_n <-  ____(___________)
+
+Crystal_Iron_stats <- __________ (_______, ___________, ______________)
+Crystal_Iron_stats
+```
+
+```{r Iron_function_stats-solution}
+Iron_mass <- c(10.6, 10.8, 9.85, 11.6, 10.05, 10.8, 11.26)
+Iron_mean <- mean(Iron_mass)
+Iron_sd <- sd(Iron_mass)
+Iron_n <-  length(Iron_mass)
+
+Crystal_Iron_stats <- data.frame(Iron_mass, Iron_sd, Iron_n)
+Crystal_Iron_stats
+```
+
+Once finished, check your answer against the solution and **Run Code**
+
+```{r sigcheckagain}
+question("How many sig figs should standard deviation have?",
+         answer("Depends on the precision of the instruments", message="No this is not the case for error."),
+         answer("2", message = "No, 2 sig figs is the rule for RSD not SD. SD is a way of recording error, try again."),
+         answer("1", correct=TRUE,message="Great Job, sd falls under error rules and only has 1 sig fig."),
+         random_answer_order = TRUE,
+         allow_retry = TRUE)
+
+```
+
+##8.2 Calculating Statistics
+
+After creating the four basic R vectors needed (data, avg, sd, n) it is possible to use the vectors to calculate statistics that don't have a previously made calculation function.
+
+For this section, we will calculate Relative Standard Deviation.
+
+RSD doesn't currently have a function that is used to calculate it. Instead, we will input the formula into R and replace the variables in the formula with our previously assigned vector names.
+
+The formula for RSD is 
+`RSD <-(SD/Avg)*100`
+
+###Exercise 24.
+
+Calculate the RSD of Iron using Iron_mean and Iron_sd.
+
+```{r Ironset}
+Iron_mass <- c(10.6, 10.8, 9.85, 11.6, 10.05, 10.8, 11.26)
+Iron_mean <- mean(Iron_mass)
+Iron_sd <- sd(Iron_mass)
+Iron_n <-  length(Iron_mass)
+Crystal_Iron_stats <- data.frame(Iron_mass, Iron_sd, Iron_n)
+```
+
+```{r Iron_RSD-solution}
+RSD <- (Iron_sd/Iron_mean)*100
+RSD
+```
+
+
+```{r Iron_RSD, exercise=TRUE, exercise.setup="Ironset"}
+RSD <- 
+RSD
+```
+
+Once finished, check your answer against the solution and **Run Code**
+
+```{r sigcheckagainandagain}
+question("How many sig figs should relative standard deviation have?",
+         answer("Depends on the precision of the instruments", message="No this is not the case for relative standard deviation"),
+         answer("2", correct=TRUE, message = "Great Job, RSD is the exception to the error rule and has 2 sig figs!"),
+         answer("1", message="No, RSD is the exception to the error rule and does not have 1 sig fig."),random_answer_order = TRUE,
+         allow_retry = TRUE)
+
+```
+
+##8.3 Multiple Input Statistics
+
+Confidence Intervals.
+
+Confidence intervals are a bit complicated because they require multiple inputs and a calculation portion.
+
+The general formula that R uses is:
+
+`CI95 <- qt(0.975,df=n-1)*Sd/sqrt(n)`
+
+In most cases for chem 101 you will want to use 0.975 for the first input into the function
+
+###Exercise 25.
+
+Calculate the confidence interval for Iron using Iron_n and Iron_sd
+
+
+```{r Iron_CI, exercise=TRUE, exercise.setup="Ironset"}
+CI95 <- 
+CI95
+```
+
+Once finished, check your answer against the solution and **Run Code**
+
+```{r Iron_CI-solution}
+CI95 <- qt(0.975,df=Iron_n-1)*Iron_sd/sqrt(Iron_n)
+CI95
+```
+
+```{r sigthree}
+question("How many sig figs should confidence intervals have?",
+         answer("Depends on the precision of the instruments", message="No this is not the case for error."),
+         answer("2", message = "No, 2 sig figs is the rule for RSD not CI. CI is a way of recording error, try again."),
+         answer("1", correct=TRUE,message="Great Job, CI falls under error rules and only has 1 sig fig."),
+         random_answer_order = TRUE,
+         allow_retry = TRUE)
+```
+
+## 9.0 Using Files in R
+This chapter will explain the final pieces of the puzzle that will allow you to complete assignments in R instead of inside interactive code chunks.
+
+##9.1 RScript. 
+RScripts are a type of file made entirely of code and comments. 
+
+They are most useful when you are trying to write code that will remain in R. This type of R file isn't frequently used in introductory courses since often the primary objective is to create a well formatted output. 
+
+Coding in RScripts can be useful for you if you have previous coding experience since the file will look similar to files you will have seen in other languages.
+
+##9.2 RNotebook.
+
+RNotebooks are a type of file with code chunks that can be executed independently and interactively. When you execute code within the notebook, the results appear beneath the code. 
+
+They are a relatively new feature of R and are not currently used in Chem 101 and Chem 102.
+
+##9.3 RMarkdown.
+
+RMarkdown is the file type of choice for general chemistry at Reed. Primarily because RMarkdown files allow you to load a previously made template.
+
+Templates are useful because Danielle can write lab report instructions into R that you can add your data to. Templates also help make a consistent output, which is great because it allows you to focus on the data analysis without worrying about how it will look.
+
+RMarkdown files are also great because they allow you to write text that will be formatted alongside your code outputs when `knitted` into a word document.
+
+###9.3.1 YAML.
+
+YAML is the name for the header of an RMarkdown document.
+
+It is parsed by R and will instruct the format in which the file will be exported to. Primarily the output we use is `chemistr::chem_lab_word`, this is an output designed and modified by Reed that creates lab reports in word.
+
+This is an example of a YAML header:    
+
+`---` 
+
+`title: "Gram Atomic Weight of Magnesium"  `
+
+`author: "Author Name" `   
+
+`date: "Date"    ` 
+
+`output: chemistr::chem_lab_word     ` 
+
+`---`     
+
+**When Modifying a YAML header for gen chem only change the Name, Date, and Title sections. Make sure that these sections stay in quotation marks.**
+
+###9.3.2 Code Chunks
+
+Code chunks were previously discussed in chapter 2 so we won't go into much detail here. 
+
+The main thing to know is how to identify and create a code chunk.
+
+Code chunks are opened by a line of code with ` ```{r} ` 
+and are closed by a line of code with `  ```   `.
+
+Inside these two lines, R will parse the text.
+
+A fast way to create a code chunk is to click the **insert** button at the top of the code editor and then click **R**. 
+
+Another thing to note about code chunks is that you can add designations to the label that will tell R to do certain things. 
+
+For example. `{r, echo= TRUE}` will mirror the code inside the chunk into the output. Generally, we want echo set to FALSE instead.
+
+###9.3.3 Setup
+The setup portion of a document is a chunk of code that is generally labeled ```{r setup} and contains the library loading functions. 
+
+**Make sure that your setup chunk contains** `library(chemistr)`
+
+###9.3.4 Writing text in R.
+
+Writing text in R occurs outside of code chunks. Treat text similarly to how you would type in a word document. 
+
+R text syntax is different from the previously discussed R code syntax.
+
+Here is a cool reference on how to use R text syntax. 
+https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
+
+Some main points from the reference sheets are:
+
+- In order to create separate paragraphs of text, you must hit enter twice.
+
+- In order to separate lines of text add two or more spaces to the end of the line.
+
+- Creating headers can be done using pound signs at the start of a line.
+
+- Surrounding a word in asterisks will italicize it, double asterisks will bold it.
+
+- Three asterisks in a row will create a horizontal line.
+
+###9.3.5 Knitting.
+
+Knitting is how you export an R file into a non-R format. For general chemistry, we will be knitting our files into word.
+
+In order to knit the code click the button that says **knit** with a little bar of yarn.
+
+
+##10.0 Using RStudio
+This final chapter should help you take the skills you have started to develop and apply them to writing code in RStudio.
+
+##10.1 RStudio Setup
+The four pieces that you will see when you open RStudio are:
+
+- The console.
+- The Environment.
+- The Files.
+- The Code Editor.
+
+These are not official names, rather terms that will hopefully help you recognize the parts. 
+
+When opening R for the first time you will not see the code editor. In order to access the code editor, you will have to open a file. 
+
+##10.2 The Reed Server
+
+For our work in Intro Chem, we will work on Reed's RStudio Server. This will allow everyone to work in a shared space and remove any issues with installing software onto a personal computer. 
+
+Note: the IRC computers have R and RStudio installed, and you can download and install R and RStudio to your own computer for free. Folks at the CUS help desk can help with software installation issues/questions.
+
+###10.2.1 Logging in and Initial Screen
+
+In order to access the RStudio Server follow this link: https://rstudio.reed.edu/auth-sign-in
+
+Log in using your Reed College (Kerberos) https://www.reed.edu/cis/help/kerberos.html#reed username and password
+
+###10.2.2 Sharing Projects
+
+The shared project feature of the RStudio Server will come in handy for lab reports since those will primarily be completed in groups of two.
+
+In order to share a project click **File**, **Share Project...**
+
+The window that pops up will appear blank for a few minutes, this is not an error. R has to process a lot of information in order to share a project and it takes a while to load. 
+
+When the window loads you will be able to search for people using their Kerberos username.
+
+To access a shared project click **File** **Open Project** and when the window pops up click **Shared with me**
+
+####**Warning**
+
+R is not set up the same way as programs like Google drive. Use extreme caution when working on a shared project.
+
+- Meet with your lab partner in person and only work on one computer at a time. 
+- If using separate computers work at different times and make sure to exit out of R when you are finished working. 
+- Communicate with your lab partner to figure out when they plan on working and schedule the time you will work on the lab reports.
+
+R will overwrite code that one person has written if another person saves an earlier version of the document after the first person has saved and exited R. This can lead to large amounts of code getting deleted.
+
+##10.3 Errors
+
+When inevitably you see your first R error here are some steps you can take to resolve the issue.
+
+1. *(Read through your code and try Running it again. *
+    - Often errors are a small mistake that are hard to notice right away, such as a missing comma.
+2. *Have your lab partner or another member of the class read through your code. *
+    - The more eyes, the more likely someone will catch the error.
+    - R errors happen to everyone, it is not an indication of your programming capabilities. 
+    - Talking with classmates will help you improve
+    - Chances are if you are having an error someone else is having the same error.
+3. *Try using the help function to make sure that you are correctly using the functions.*
+    - To do this type `?functionname()` into the console and run it.
+4.* Google the error. *
+    - With more complicated errors this can be really helpful.
+5. *Talk to Danielle.*
+    - Danielle is a great resource for small R errors.
+    - Danielle should not be your only method of getting help but she is a really great resource.
+6. *Go to drop in tutoring *
+    - Drop-in tutoring is great because there are multiple tutors at once and can collaborate to help solve the error.
+7. *Schedule an individual tutoring appointment*
+    - Individual tutoring is free and extremely useful!
+    - Schedule individual tutoring appointments through Iris.
+8.* Talk to the Chemistry Student Technology Assistant*
+9. *If all else fails reach out to Kbott.*
+    - Kbott is Reed's current R person. 
+    - She is a great resource but has to deal with a lot of students, try to use other resources first.
+    - If you want to improve your R skills Kbott can help you register for data camp courses that are not chemistry specific but really helpful!
+
+##Assessment Quiz
+The following assessment needs to be completed before coming to lab the week of **September 17th, 2018**. 
+
+Do not complete the quiz prior to reading the chapters. You may refer back to the chapters if needed, but you may not collaborate on the quiz. Please email dcass@reed.edu and vestoj@reed.edu if there are any technical issues with the assignment.
+
+##Quiz
+
+###Question 1.
+
+For the first question input the following data into R; using the concatenate and `data.frame()` functions.
+
+```{r, echo=FALSE, results="asis"}
+Iron <- c(0,.717,1.43,3.5,7.17)
+Iron_data <- data.frame(Iron)
+chem_table(Iron_data, caption="")
+```
+
+Once inputted, create a table with the statistics (n, mean, and sd) of the data set.
+
+ 
+1. Start this problem by creating and naming a vector that includes the 5 data points.
+2. convert the vector into a data frame using the `data.frame()` function.
+3. Use the `length()`,` mean()`, and `sd()` functions to calculate the statistics.
+4. Create a data frame with the 3 statistic vectors.
+5. use the `chem_table()` function to create a table of the dataframe
+
+```{r statsfinalquiz, exercise=TRUE}
+
+
+```
+
+###Question 2.
+
+```{r, results="asis"}
+Iron <- c(0,.717,1.43,3.5,7.17)
+Absorbance <- c(0,.085,0.17,0.41,0.85)
+Iron_dataframe <- data.frame(Iron, Absorbance)
+chem_table(Iron_dataframe, caption="For the next question insert the following data into R and create a graph and then extract data from the fit. ")
+```
+
+1. Create a list of Iron data points.
+- *Hint: use the concatenate function. *
+2. Create a list of Absorbance data points.
+
+3. Combine the two lists into a dataframe.
+- *Hint: use the data.frame() function. *
+4. Create a scatter plot.
+- *Hint: use the following template...* 
+
+          chem_scatter(data =  ,    
+    
+                 xvar =  ,
+                 
+                 yvar =  ,  
+                 
+                 xlab = "[Iron](µM)",
+                 
+                 ylab = "Absorbance at 508 nm",
+                 
+                 intercept = 0)
+                 
+5. Extract the fit from the scatter plot.
+- *Hint: use the  `lm(yvar ~ xvar + 0, data = )` function*
+- *Make sure to assign the fit to a vector*.
+6. Summarize the fit of the line.
+- *Hint: use the `summary()` function.*
+
+```{r graphsfinalquiz, exercise=TRUE}
+
+```
+
+###Question 3.
+
+```{r finalquizsigfigs}
+question("Check all answers that should be recorded in 2 significant figures",
+         answer("2.1 * 3.54", correct=TRUE),
+         answer("23 + 21.2", correct = TRUE),
+         answer("log(2.3*10^(-2))", correct=TRUE),
+         answer("95% CI"),
+         answer("RSD", correct=TRUE),
+         answer("SD"), random_answer_order=TRUE)
+
+```
+
+
+###Question 4
+
+Your next task is to correct the following chunk of code in order to get it to run and print the data below. 
+
+*Warning R errors are sometimes hard to read, pay attention to the code more than the error messages.*
+
+```{r error_question, exercise=TRUE}
+Iron Molarity data-> c(0 M 7.17E-6 M  1.43E-5 M 3.5E-5 M 7.17E-5 M),
+iron molarity data
+```
+
+### Question 5
+Do you feel confident starting to use R after completing this workbook, yes, no, or not_sure? (type exactly as written)
+
+```{r confidencefinalquiz-setup}
+yes <- "Great! If you feel overwhelmed by R anytime in the future semesters you can always refer back to this workbook, or the accompanying lab book."
+not_sure <- "That's okay! Starting to code in a new language is a challenge no matter your previous experience. Hopefully, this was a good start to understanding R and you can always refer back to this workbook or accompanying lab book if you run into challenges."
+no <-  "Hopefully this was a good start to understanding coding anyway! Try reaching out to dcass@reed.edu, swartzn@reed.edu, vestoj@reed.edu if you are worried. There are so many resources at Reed that can help you develop this new skill. You can always refer back to this workbook or accompanying lab book if you run into challenges."
+```
+
+```{r confidencefinalquiz, exercise=TRUE}
+
+
+```
+
+
+##Final Section 
+
+Great Job! You have officially completed the workbook, make sure you screenshot the outputs from the quiz questions and upload them onto Moodle or print them and glue them into your lab notebook for future reference.
+
